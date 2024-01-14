@@ -60,9 +60,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: brello
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
       
       - name: Login to Azure
         uses: azure/login@v1
@@ -77,5 +74,5 @@ jobs:
         with:
           app-name: 'brello-dev'
           slot-name: 'Production'
-          package: .
+          package: release.zip
           
