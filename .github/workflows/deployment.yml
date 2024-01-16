@@ -5,6 +5,8 @@ name: Build and deploy brello
 
 on:
   push:
+    branches:
+      - "**"
   paths-ignore:
       - "README.md"
       - ".github/**"
