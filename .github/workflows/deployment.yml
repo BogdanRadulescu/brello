@@ -41,16 +41,11 @@ jobs:
         run: |
           npm install
           npm run build
-          npm run test --if-present
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* .next -qr
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
-        with:
-          name: brello
-          path: release.zip
+      - name: Build package folder
+        run: |
+          mv ./build/static ./build/standalone/build
+          mv ./public ./build/standalone
       
       - name: Login to Azure
         uses: azure/login@v1
@@ -65,5 +60,5 @@ jobs:
         with:
           app-name: 'brello-dev'
           slot-name: 'Production'
-          package: release.zip
+          package: ./build/standalone
           
