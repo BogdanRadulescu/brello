@@ -3,14 +3,13 @@
 
 name: Build and deploy brello
 
-on:
-  push:
-    branches:
-      - BREL-5
-  workflow_dispatch:
+on: push
+paths-ignore:
+    - "README.md"
+    - ".github/**"
+workflow_dispatch:
 
 jobs:
- 
   build:
     runs-on: ubuntu-latest
     steps:
@@ -25,15 +24,18 @@ jobs:
         with:
           path: |
             ~/.npm
-            ${{ github.workspace }}/.next/cache
+            ${{ github.workspace }}/build/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
-      - name: npm install, build, and test
+      - name: npm install, build
         run: |
           npm install
           npm run build
+      
+      - name: lint check
+        run: npm run lint
 
       - name: Build package folder and zip artifact
         run: |
@@ -49,7 +51,8 @@ jobs:
          
   deploy-dev: 
     runs-on: ubuntu-latest 
-    needs: build 
+    needs: build
+    if: github.ref == 'refs/heads/main'
     environment: 
       name: 'Development' 
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }} 
