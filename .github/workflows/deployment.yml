@@ -78,5 +78,5 @@ jobs:
         with:
           app-name: 'brello-dev'
           slot-name: 'Production'
-          package: brello
+          package: brello/build/standalone
           
