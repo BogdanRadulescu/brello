@@ -6,17 +6,16 @@
 * Run `nvm use` from the project root
 * Run `npm i`
 
-## Getting Started
+## env files
+
+* Copy `.env.template` to `.env`
+* Fill in the values with secrets
+
+## Running the server
 
 To run the development server:
 ```
 npm run dev
-```
-
-To run the production server:
-```
-npm run build
-npm run start
 ```
 
 To run the linter:

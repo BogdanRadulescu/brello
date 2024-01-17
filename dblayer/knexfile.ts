@@ -1,16 +1,20 @@
-import knex from 'knex';
-import TYPES from 'tedious';
+const knex = require('knex');
+const TYPES = require('tedious');
+const dotenv = require('dotenv');
 
-export const dbClient = knex({
+dotenv.config({ path: '../.env' });
+
+module.exports = {
   client: 'mssql',
   connection: {
-    host: '127.0.0.1',
+    host: process.env.DB_HOST,
     port: 1433,
-    user: 'your_database_user',
-    password: 'your_database_password',
-    database: 'myapp_test',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    encrypt: true,
     options: {
-      mapBinding: value => {
+      mapBinding: (value: { type: any; value: any; } | null) => {
         // bind all strings to varchar instead of nvarchar
         if (typeof value === 'string') {
           return {
@@ -32,9 +36,12 @@ export const dbClient = knex({
     }
   },
   migrations: {
-    directory: './dblayer/migrations'
+    directory: 'migrations',
+    tableName: 'migrations_history',
+    extension: 'ts',
   },
   seeds: {
-    directory: './dblayer/seeds'
+    directory: 'seeds',
+    extension: 'ts'
   }
-});
+};
