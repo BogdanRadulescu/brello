@@ -88,7 +88,9 @@ jobs:
           cd dblayer && npm install
       
       - name: migrate:latest
-        run: npm run migrate:latest
+        run: |
+          pwd
+          cd dblayer && npm run migrate:latest
 
   deploy-dev: 
     runs-on: ubuntu-latest
