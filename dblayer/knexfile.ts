@@ -1,24 +1,24 @@
-const knex = require('knex');
-const TYPES = require('tedious');
-const dotenv = require('dotenv');
+import { Knex } from 'knex';
+import * as dotenv from 'dotenv';
+import { TYPES } from 'tedious';
 
 dotenv.config({ path: '../.env' });
 
-module.exports = {
+const config: Knex.Config =  {
   client: 'mssql',
   connection: {
-    server: process.env.DB_HOST,
-    user: process.env.DB_USER,
+    server: process.env.DB_HOST as string,
+    userName: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    encrypt: true,
+    database: process.env.DB_NAME as string,
     port: 1433,
     options: {
-      mapBinding: (value: { type: any; value: any; } | null) => {
+      encrypt: true,
+      mapBinding: (value: any) => {
         // bind all strings to varchar instead of nvarchar
         if (typeof value === 'string') {
           return {
-            type: TYPES.TYPES.VarChar,
+            type: TYPES.VarChar,
             value
           };
         }
@@ -45,3 +45,5 @@ module.exports = {
     extension: 'ts'
   }
 };
+
+export default config;
