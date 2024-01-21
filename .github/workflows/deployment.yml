@@ -49,15 +49,15 @@ jobs:
     runs-on: ubuntu-latest 
     needs: build-lint-and-test
     if: github.ref == 'refs/heads/BREL-6'
+    steps:
+      - uses: actions/checkout@v4
 
-    - uses: actions/checkout@v4
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.9.0'
 
-    - name: Set up Node.js version
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.9.0'
-
-    - uses: actions/cache@v3
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.npm
@@ -66,23 +66,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
-    - name: Login to Azure
+      - name: Login to Azure
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_APPSERVICE_CLIENTID }}
           tenant-id: ${{ secrets.AZURE_TENANTID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTIONID }}
 
-    - name: npm install & build config
-      run: |
-        echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
-        echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-        echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-        cd dblayer && npm install
-    
-    - name: migrate:latest
-      run: npm run migrate:latest
+      - name: npm install & build config
+        run: |
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          cd dblayer && npm install
+      
+      - name: migrate:latest
+        run: npm run migrate:latest
 
   deploy-dev: 
     runs-on: ubuntu-latest
