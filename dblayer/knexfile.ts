@@ -7,12 +7,12 @@ dotenv.config({ path: '../.env' });
 module.exports = {
   client: 'mssql',
   connection: {
-    host: process.env.DB_HOST,
-    port: 1433,
+    server: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     encrypt: true,
+    port: 1433,
     options: {
       mapBinding: (value: { type: any; value: any; } | null) => {
         // bind all strings to varchar instead of nvarchar
