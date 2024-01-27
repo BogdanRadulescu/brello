@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ESNext",
     "lib": [
       "dom",
       "dom.iterable",
@@ -16,6 +16,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "allowSyntheticDefaultImports": true,
     "incremental": true,
     "plugins": [
       {
@@ -23,8 +24,8 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
+            "auth/*": [
+        "./auth/*"
       ]
     }
   },
