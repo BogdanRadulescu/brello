@@ -1,5 +1,7 @@
 import { EmailSigninRequest, getIdAndRefreshToken } from "auth/authClient";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Login() {
     let error = "";
@@ -7,7 +9,7 @@ export default async function Login() {
     const tryLogin = async (formData: FormData) => {
         'use server'
         const signinRequest: EmailSigninRequest = {
-            username: formData.get("username")?.valueOf() as string,
+            email: formData.get("email")?.valueOf() as string,
             password: formData.get("password")?.valueOf() as string
         };
     
@@ -16,20 +18,19 @@ export default async function Login() {
             return;
         }
 
-        const response = NextResponse.redirect("/app");
-        response.cookies.set("idToken", idAndRefreshToken.idToken);
-        response.cookies.set("refreshToken", idAndRefreshToken.refreshToken);
+        cookies().set("idToken", idAndRefreshToken.idToken);
+        cookies().set("refreshToken", idAndRefreshToken.refreshToken);
 
-        return response;
+        redirect("/app");
     }
 
     return <>
         <div>{error}</div>
         <form action={tryLogin}>
-            <label htmlFor="username">Username</label><br/>
-            <input type="text" id="username" name="username"/><br/>
+            <label htmlFor="email">Email</label><br/>
+            <input type="email" id="email" name="email"/><br/>
             <label htmlFor="password">Password</label><br/>
-            <input type="text" id="password" name="password"/><br/>
+            <input type="password" id="password" name="password"/><br/>
             <button type="submit">Login</button>
         </form>
     </>;
